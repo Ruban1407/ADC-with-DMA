@@ -1,28 +1,19 @@
-/* USER CODE BEGIN Header */
-/**
-  ******************************************************************************
-  * @file    main.c
-  * @brief   TIM6 (100Hz) -> ADC -> DMA -> UART
-  ******************************************************************************
-  */
-/* USER CODE END Header */
+
 
 #include "main.h"
 #include <stdio.h>
 #include <string.h>
 
-/* Private variables ---------------------------------------------------------*/
+
 ADC_HandleTypeDef hadc1;
 DMA_HandleTypeDef hdma_adc1;
 TIM_HandleTypeDef htim6;
 UART_HandleTypeDef huart2;
 
-/* USER CODE BEGIN PV */
+
 uint16_t adc_raw;
 char uart_buf[64];
-/* USER CODE END PV */
 
-/* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_DMA_Init(void);
@@ -30,8 +21,6 @@ static void MX_ADC1_Init(void);
 static void MX_USART2_UART_Init(void);
 static void MX_TIM6_Init(void);
 
-/* USER CODE BEGIN 0 */
-/* USER CODE END 0 */
 
 int main(void)
 {
@@ -44,10 +33,9 @@ int main(void)
   MX_USART2_UART_Init();
   MX_TIM6_Init();
 
-  /* USER CODE BEGIN 2 */
   HAL_TIM_Base_Start(&htim6);
   HAL_ADC_Start_DMA(&hadc1, (uint32_t *)&adc_raw, 1);
-  /* USER CODE END 2 */
+
 
   while (1)
   {
@@ -63,11 +51,10 @@ int main(void)
 	                        HAL_MAX_DELAY);
 
 	      HAL_Delay(1000);
-    /* everything handled by DMA + callback */
+    
   }
 }
 
-/* ===================== ADC DMA COMPLETE CALLBACK ===================== */
 
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc)
 {
@@ -77,20 +64,16 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc)
   }
 }
 
-/* ===================== SYSTEM CLOCK ===================== */
 
 void SystemClock_Config(void)
 {
 	  RCC_OscInitTypeDef RCC_OscInitStruct = {0};
 	  RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
 
-	  /** Configure the main internal regulator output voltage
-	  */
+
 	  HAL_PWREx_ControlVoltageScaling(PWR_REGULATOR_VOLTAGE_SCALE1_BOOST);
 
-	  /** Initializes the RCC Oscillators according to the specified parameters
-	  * in the RCC_OscInitTypeDef structure.
-	  */
+
 	  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
 	  RCC_OscInitStruct.HSIState = RCC_HSI_ON;
 	  RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
@@ -121,7 +104,7 @@ void SystemClock_Config(void)
 	  }
 }
 
-/* ===================== ADC ===================== */
+
 
 static void MX_ADC1_Init(void)
 {
@@ -145,7 +128,7 @@ static void MX_ADC1_Init(void)
   HAL_ADC_ConfigChannel(&hadc1, &sConfig);
 }
 
-/* ===================== TIM6 ===================== */
+
 
 static void MX_TIM6_Init(void)
 {
@@ -161,17 +144,11 @@ static void MX_TIM6_Init(void)
   HAL_TIMEx_MasterConfigSynchronization(&htim6, &sMasterConfig);
 }
 
-/* ===================== USART2 ===================== */
+
 
 static void MX_USART2_UART_Init(void)
 {
-	 /* USER CODE BEGIN USART2_Init 0 */
 
-	  /* USER CODE END USART2_Init 0 */
-
-	  /* USER CODE BEGIN USART2_Init 1 */
-
-	  /* USER CODE END USART2_Init 1 */
 	  huart2.Instance = USART2;
 	  huart2.Init.BaudRate = 115200;
 	  huart2.Init.WordLength = UART_WORDLENGTH_8B;
@@ -199,12 +176,10 @@ static void MX_USART2_UART_Init(void)
 	  {
 	    Error_Handler();
 	  }
-	  /* USER CODE BEGIN USART2_Init 2 */
-
-	  /* USER CODE END USART2_Init 2 */
+	
 }
 
-/* ===================== DMA ===================== */
+
 
 static void MX_DMA_Init(void)
 {
@@ -215,17 +190,18 @@ static void MX_DMA_Init(void)
   HAL_NVIC_EnableIRQ(DMA1_Channel1_IRQn);
 }
 
-/* ===================== GPIO ===================== */
+
 
 static void MX_GPIO_Init(void)
 {
   __HAL_RCC_GPIOA_CLK_ENABLE();
 }
 
-/* ===================== ERROR HANDLER ===================== */
+
 
 void Error_Handler(void)
 {
   __disable_irq();
   while (1) {}
 }
+
